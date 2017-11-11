@@ -1,0 +1,16 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: rust
+inputs:
+  - name: repository
+run:
+  path: /bin/sh
+  args:
+    - -exc
+    - |
+      rustup override set stable
+      rustup update stable
+      cargo build --release
