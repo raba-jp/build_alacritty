@@ -1,4 +1,10 @@
 ---
+resource_types:
+  - name: google-drive
+    type: docker-image
+    source:
+      repository: jpatel4pivotal/google-drive-concourse-resource
+
 resources:
   - name: repository
     type: git
@@ -8,6 +14,14 @@ resources:
     type: git
     source:
       uri: https://github.com/raba-jp/build_alacritty.git
+  - name: drive
+    type: google-drive
+    source:
+      drive_client_email: {{google_drive_client_email}}
+      drive_client_id: {{google_drive_client_id}}
+      drive_private_key_id: {{google_drive_private_key_id}}
+      drive_private_key: {{google_drive_private_key}}
+      drive_folder_id: {{google_drive_folder_id}}
 
 jobs:
   - name: test
@@ -28,5 +42,8 @@ jobs:
         - get: build_repo
           trigger: true
           passed: [test]
+      - put: drive
+        params:
+          file_name: repository/target/release
       - task: build
         file: build_repo/tasks/build.yml
