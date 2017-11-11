@@ -11,6 +11,7 @@ run:
   args:
     - -exc
     - |
+      cd repository
       rustup override set stable
       rustup update stable
       cargo build --release
