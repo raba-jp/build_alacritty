@@ -1,0 +1,32 @@
+---
+resources:
+  - name: repository
+    type: git
+    source:
+      uri: https://github.com/jwilm/alacritty.git
+  - name: build_repo
+    type: git
+    source:
+      uri: https://github.com/raba-jp/build_alacritty.git
+
+jobs:
+  - name: test
+    plan:
+      - aggregate:
+        - get: repository
+          trigger: true
+        - get: build_repo
+          trigger: true
+      - task: test
+        file: build_repo/tasks/test.yml
+  - name: build
+    plan:
+      - aggregate:
+        - get: repository
+          trigger: true
+          passed: [test]
+        - get: build_repo
+          trigger: true
+          passed: [test]
+      - task: build
+        file: build_repo/tasks/build.yml
