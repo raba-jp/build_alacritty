@@ -1,0 +1,15 @@
+---
+platform: linux
+image_resources:
+  type: docker-image
+  source:
+    repository: rust
+inputs:
+  - name: repository
+run:
+  path: /bin/sh
+  args:
+    - -exc
+    - |
+      cd repository
+      cargo test --no-default-features
