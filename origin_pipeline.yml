@@ -58,11 +58,11 @@ jobs:
         - get: build_repo
           trigger: true
           passed: [test]
+      - task: build
+        file: build_repo/tasks/build.yml
       - put: drive
         params:
           file_name: repository/target/release
-      - task: build
-        file: build_repo/tasks/build.yml
       - put: slack
         params:
           channel: '#ci'
