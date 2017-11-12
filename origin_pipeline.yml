@@ -4,6 +4,11 @@ resource_types:
     type: docker-image
     source:
       repository: jpatel4pivotal/google-drive-concourse-resource
+  - name: slack-notification
+    type: docker-image
+    source:
+      repository: cfcommunity/slack-notification-resource
+      tag: latest
 
 resources:
   - name: repository
@@ -22,6 +27,10 @@ resources:
       drive_private_key_id: {{google_drive_private_key_id}}
       drive_private_key: {{google_drive_private_key}}
       drive_folder_id: {{google_drive_folder_id}}
+  - name: slack
+    type: slack-notification
+    source:
+      url: {{slack_webhook_url}}
 
 jobs:
   - name: test
@@ -47,3 +56,7 @@ jobs:
           file_name: repository/target/release
       - task: build
         file: build_repo/tasks/build.yml
+      - put: slack
+        params:
+          channel: '#ci'
+          text: alacritty origin build complete!
