@@ -1,9 +1,9 @@
 ---
 resource_types:
-  - name: google-drive
+  - name: s3-upload
     type: docker-image
     source:
-      repository: jpatel4pivotal/google-drive-concourse-resource
+      repository: making/s3-resource-simple
   - name: slack-notification
     type: docker-image
     source:
@@ -19,14 +19,15 @@ resources:
     type: git
     source:
       uri: https://github.com/raba-jp/build_alacritty.git
-  - name: drive
-    type: google-drive
+  - name: s3
+    type: s3-upload
     source:
-      drive_client_email: {{google_drive_client_email}}
-      drive_client_id: {{google_drive_client_id}}
-      drive_private_key_id: {{google_drive_private_key_id}}
-      drive_private_key: {{google_drive_private_key}}
-      drive_folder_id: {{google_drive_folder_id}}
+      access_key_id: {{aws_access_key_id}}
+      secret_access_key: {{aws_secret_access_key}}
+      bucket: {{aws_bucket}}
+      endpoint: {{aws_s3_endpoint}}
+      disable_ssl: true
+      use_v4: true
   - name: slack
     type: slack-notification
     source:
@@ -61,9 +62,7 @@ jobs:
           passed: [test]
       - task: build
         file: build_repo/tasks/build.yml
-      - put: drive
-        params:
-          file_name: repository/target/release
+      - put: s3
       - put: slack
         params:
           channel: '#ci'
