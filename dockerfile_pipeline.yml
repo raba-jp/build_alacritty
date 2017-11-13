@@ -1,0 +1,54 @@
+---
+resources:
+  - name: repository
+    type: git
+    source:
+      uri: https://github.com/jwilm/alacritty
+  - name: dockerhub
+    type: docker-image
+    source:
+      repository: rabajp/build_alacritty_origin
+      username: {{dockerhub_username}}
+      password: {{dockerhub_password}}
+
+jobs:
+  - name: build
+    plan:
+      - get: repository
+        trigger: true
+      - task: build
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: rust
+          inputs:
+            - name: repository
+          outputs:
+            - name: workspace
+          run:
+            path: /bin/bash
+            args:
+              - -c
+              - |
+                output_dir=workspace
+                cat << EOF > "${output_dir}/Dockerfile"
+                FROM rust:latest
+                RUN apt-get update && \
+                      apt-get install -y \
+                      cmake \
+                      libfreetype6-dev \
+                      libfontconfig1-dev \
+                      xclip
+                ADD alacritty /tmp/alacritty
+                WORKDIR /tmp/alacritty
+                RUN rustup toolchain install stable-x86_64-apple-darwin && \
+                rustup override set stable && \
+                rustup update stable
+                EOF
+                cp -R ./repository "${output_dir}/alacritty"
+                ls -al
+      - put: dockerhub
+        params:
+          build: workspace
