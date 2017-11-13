@@ -48,7 +48,6 @@ jobs:
                 rustup update stable
                 EOF
                 cp -R ./repository "${output_dir}/alacritty"
-                ls -al
       - put: dockerhub
         params:
           build: workspace
