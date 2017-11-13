@@ -11,5 +11,7 @@ run:
   args:
     - -exc
     - |
+      apt-get update
+      apt-get install -y cmake
       cd repository
       cargo test --no-default-features
