@@ -1,9 +1,5 @@
 ---
 resource_types:
-  - name: s3-upload
-    type: docker-image
-    source:
-      repository: making/s3-resource-simple
   - name: slack-notification
     type: docker-image
     source:
@@ -20,14 +16,12 @@ resources:
     source:
       uri: https://github.com/raba-jp/build_alacritty.git
   - name: s3
-    type: s3-upload
+    type: s3
     source:
       access_key_id: {{aws_access_key_id}}
       secret_access_key: {{aws_secret_access_key}}
       bucket: {{aws_bucket}}
       endpoint: {{aws_s3_endpoint}}
-      disable_ssl: true
-      use_v4: true
   - name: slack
     type: slack-notification
     source:
@@ -63,6 +57,8 @@ jobs:
       - task: build
         file: build_repo/tasks/build.yml
       - put: s3
+        params:
+          file: workspace
       - put: slack
         params:
           channel: '#ci'
