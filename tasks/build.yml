@@ -3,17 +3,20 @@ platform: linux
 image_resource:
   type: docker-image
   source:
-    repository: rust
+    repository: rabajp/build_alacritty_origin
 inputs:
   - name: repository
+outputs:
+  - name: workspace
 run:
-  path: /bin/sh
+  path: /bin/bash
   args:
-    - -exc
+    - -c
     - |
-      apt-get update
-      apt-get install -y cmake libfreetype6-dev libfontconfig1-dev xclip
+      mkdir workspace
       cd repository
       rustup override set stable
       rustup update stable
       cargo build --release
+      cd ../
+      cp -R ./repository/target workspace
