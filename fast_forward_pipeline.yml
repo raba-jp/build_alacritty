@@ -1,0 +1,54 @@
+---
+resources:
+  - name: origin
+    type: git
+    source:
+      uri: https://github.com/jwilm/alacritty.git
+  - name: forked
+    type: git
+    source:
+      uri: git@github.com:raba-jp/alacritty.git
+      branch: master
+      private_key: {{github_private_key}}
+      git_config:
+        - name: user.name
+          value: Hiroki Sakuraba
+        - name: user.email
+          value: sakuraba@tech.gr.jp
+  - name: build_repo
+    type: git
+    source:
+      uri: https://github.com/raba-jp/build_alacritty.git
+
+jobs:
+  - name: commit
+    plan:
+      - aggregate:
+        - get: origin
+          trigger: true
+        - get: forked
+        - get: build_repo
+      - task: commit
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: alpine
+          inputs:
+            - name: forked
+          run:
+            path: /bin/sh
+            args:
+              - -exc
+              - |
+                apk --update add git
+                cd forked
+                git config user.name "Hiroki Sakuraba"
+                git config user.email "sakuraba@tech.gr.jp"
+                git remote add jwilm https://github.com/jwilm/alacritty.git
+                git fetch jwilm
+                git merge --no-edit remotes/jwilm/master
+      - put: forked
+        params:
+          repository: forked
