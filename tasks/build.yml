@@ -11,6 +11,8 @@ run:
   args:
     - -exc
     - |
+      apt-get update
+      apt-get install -y cmake libfreetype6-dev libfontconfig1-dev xclip
       cd repository
       rustup override set stable
       rustup update stable
