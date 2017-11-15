@@ -26,12 +26,6 @@ resources:
     type: slack-notification
     source:
       url: {{slack_webhook_url}}
-  - name: timer
-    type: time
-    source:
-      start: 06:00 PM
-      stop: 12:00 PM
-      location: Asia/Tokyo
 
 jobs:
   - name: test
@@ -40,8 +34,6 @@ jobs:
         - get: repository
           trigger: true
         - get: build
-          trigger: true
-        - get: timer
           trigger: true
       - task: test
         file: build/alacritty/tasks/test.yml

@@ -11,5 +11,7 @@ run:
   args:
     - -exc
     - |
+      mkdir repository/target
+      cp -R /tmp/alacritty/target/debug repository/target
       cd repository
-      cargo test --no-default-features --release
+      cargo test --no-default-features

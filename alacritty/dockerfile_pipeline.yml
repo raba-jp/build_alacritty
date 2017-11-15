@@ -46,7 +46,8 @@ jobs:
                 RUN rustup toolchain install stable-x86_64-apple-darwin && \
                 rustup override set stable && \
                 rustup update stable && \
-                cargo build --lib
+                cargo build --lib && \
+                cargo build --lib --release
                 EOF
                 cp -R ./repository "${output_dir}/alacritty"
       - put: dockerhub
