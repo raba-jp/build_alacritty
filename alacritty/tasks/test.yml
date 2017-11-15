@@ -12,4 +12,4 @@ run:
     - -exc
     - |
       cd repository
-      cargo test --no-default-features
+      cargo test --no-default-features --release
