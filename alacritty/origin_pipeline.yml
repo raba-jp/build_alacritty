@@ -34,7 +34,6 @@ jobs:
         - get: repository
           trigger: true
         - get: build
-          trigger: true
       - task: test
         file: build/alacritty/tasks/test.yml
   - name: build
