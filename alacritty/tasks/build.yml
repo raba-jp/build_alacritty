@@ -13,13 +13,11 @@ run:
   args:
     - -c
     - |
-      mkdir workspace
       mkdir repository/target
       cp -R /tmp/alacritty/target/release repository/target
       cd repository
       rustup override set stable
       rustup update stable
-      cargo build --release
+      cargo build --release --target x86_64-apple-darwin
       cd ../
       cp -R ./repository/target workspace
-      tar zcvf alacritty.tar.gz workspace
