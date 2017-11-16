@@ -14,4 +14,4 @@ run:
       mkdir repository/target
       cp -R /tmp/alacritty/target/debug repository/target
       cd repository
-      cargo test --no-default-features
+      cargo test --no-default-features --target x86_64-apple-darwin
