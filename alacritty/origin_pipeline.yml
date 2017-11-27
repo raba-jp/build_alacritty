@@ -22,6 +22,7 @@ resources:
       secret_access_key: {{aws_secret_access_key}}
       bucket: {{aws_bucket}}
       endpoint: {{aws_s3_endpoint}}
+      versioned_file: 'alacritty/alacritty(.*).zip'
   - name: slack
     type: slack-notification
     source:
@@ -49,8 +50,8 @@ jobs:
         file: build/alacritty/tasks/build.yml
       - put: s3
         params:
-          file: alacritty.tar.gz
+          file: workspace/alacritty.zip
       - put: slack
         params:
-          channel: '#ci'
+          channel: '#notification'
           text: alacritty origin build complete!

@@ -1,9 +1,5 @@
 ---
-platform: linux
-image_resource:
-  type: docker-image
-  source:
-    repository: rabajp/build_alacritty_origin
+platform: darwin
 inputs:
   - name: repository
 outputs:
@@ -13,11 +9,10 @@ run:
   args:
     - -c
     - |
-      mkdir repository/target
-      cp -R /tmp/alacritty/target/release repository/target
+      export PATH=/usr/local/bin:$PATH
       cd repository
       rustup override set stable
       rustup update stable
       cargo build --release --target x86_64-apple-darwin
-      cd ../
-      cp -R ./repository/target workspace
+      zip alacritty.zip target/release/osx/Alacritty.app
+      cp alacritty.zip ../workspace

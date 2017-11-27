@@ -1,17 +1,12 @@
 ---
-platform: linux
-image_resource:
-  type: docker-image
-  source:
-    repository: rabajp/build_alacritty_origin
+platform: darwin
 inputs:
   - name: repository
 run:
-  path: /bin/sh
+  path: /bin/bash
+  dir: repository
   args:
-    - -exc
+    - -c
     - |
-      mkdir repository/target
-      cp -R /tmp/alacritty/target/debug repository/target
-      cd repository
+      export PATH=/usr/local/bin:$PATH
       cargo test --no-default-features --target x86_64-apple-darwin
